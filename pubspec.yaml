@@ -1,0 +1,25 @@
+name: encryption_test
+description: A Flutter project for testing encryption functionality.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '^3.8.0'
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_crypto_security:
+      git:
+        url: https://github.com/sudhi001/flutter_crypto_security.git
+  logger: ^2.0.2+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true 
