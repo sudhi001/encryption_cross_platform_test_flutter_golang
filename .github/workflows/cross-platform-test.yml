@@ -1,0 +1,58 @@
+name: Cross-Platform Encryption Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+        
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+        channel: 'stable'
+        
+    - name: Install Go dependencies
+      run: go mod tidy
+      
+    - name: Install Flutter dependencies
+      run: flutter pub get
+      
+    - name: Make scripts executable
+      run: chmod +x *.sh
+      
+    - name: Run cross-platform encryption tests
+      run: ./run_cross_platform_workflow.sh
+      
+    - name: Upload test artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: |
+          generated_keys/
+          *.log
+        retention-days: 7
+        
+    - name: Check test results
+      run: |
+        if [ -f "generated_keys/cross_platform_report.md" ]; then
+          echo "✅ Cross-platform tests completed successfully"
+          cat generated_keys/cross_platform_report.md
+        else
+          echo "❌ Cross-platform tests failed"
+          exit 1
+        fi 
